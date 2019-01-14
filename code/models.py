@@ -44,8 +44,8 @@ class Generator(GANModule):
         """
         super().__init__()
 
-        if not (img_size % 16):
-            raise ValueError("Image size has to be a multiple of 16")
+        if not (img_size % 16 == 0):
+            raise ValueError(f"Image size has to be a multiple of 16, got {img_size}")
 
         # calculate corresponding number of deconvolution blocks and filters in 1st deconvolution block
         # img_size == 16 * factor; img_size / 2 == 4 * 2**n => n = 1 + log2(factor)
@@ -86,11 +86,11 @@ class Generator(GANModule):
                     bias=False
                 )
             )
-            self.add_module(
+            self.net.add_module(
                 name=str(layers_counter+1),
                 module=nn.BatchNorm3d(num_features=current_num_filters)
             )
-            self.add_module(
+            self.net.add_module(
                 name=str(layers_counter+2),
                 module=nn.ReLU(inplace=True)
             )
@@ -154,8 +154,8 @@ class Discriminator(GANModule):
         """
         super().__init__()
 
-        if not (img_size % 16):
-            raise ValueError("Image size has to be a multiple of 16")
+        if not (img_size % 16 == 0):
+            raise ValueError(f"Image size has to be a multiple of 16, got {img_size}")
 
         # build first convolutional block
         self.net = nn.Sequential(

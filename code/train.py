@@ -16,11 +16,11 @@ from ignite.handlers import ModelCheckpoint, Timer
 from ignite.metrics import RunningAverage
 from torch import optim
 from torch.utils.data import DataLoader
-
-from .dataset import HDF5ImageDataset
-from .models import Discriminator, Generator
-from .utils import D_CHECKPOINT_NAME, G_CHECKPOINT_NAME
-from .utils import fix_random_seed
+from torchsummary import summary
+from dataset import HDF5ImageDataset
+from models import Discriminator, Generator
+from utils import D_CHECKPOINT_NAME, G_CHECKPOINT_NAME
+from utils import fix_random_seed
 
 mpl.use('agg')
 # smoothing coefficient
@@ -73,7 +73,7 @@ def train_gan(
     """
     seed = fix_random_seed(seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    logger.info(f"Train started with seed: {seed}")
+    # logger.info(f"Train started with seed: {seed}")
     dataset = HDF5ImageDataset(image_dir=data_dir)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
     img_size = dataset.shape[-1]
@@ -93,6 +93,8 @@ def train_gan(
         num_filters=d_filters,
         num_extra_layers=d_extra_layers
     ).to(device)
+    summary(net_g, (z_dim, 1, 1, 1))
+    summary(net_d, (num_channels, img_size, img_size, img_size))
 
     if saved_g:
         net_g.load_state_dict(torch.load(experiment_dir / G_CHECKPOINT_NAME))
@@ -108,9 +110,9 @@ def train_gan(
     optimizer_d = optim.Adam(net_d.parameters(), lr=learning_rate, betas=(beta_1, 0.999))
 
     # labels smoothing
-    real_labels = torch.full(batch_size, fill_value=0.9, device=device)
-    fake_labels = torch.zeros(batch_size, device=device)
-    fixed_noise = torch.randn(batch_size, z_dim, 1, 1, device=device)
+    real_labels = torch.full((batch_size, ), fill_value=0.9, device=device)
+    fake_labels = torch.zeros((batch_size, ), device=device)
+    fixed_noise = torch.randn(batch_size, z_dim, 1, 1, 1, device=device)
 
     def step(engine: Engine, batch: torch.Tensor) -> Dict[str, float]:
         """
@@ -120,6 +122,7 @@ def train_gan(
         :param torch.Tensor batch: batch to process
         :return Dict[str, float]: batch metrics
         """
+        batch = batch.to(device)
         # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
         net_d.zero_grad()
         # train D with real
@@ -129,7 +132,7 @@ def train_gan(
         loss_d_real.backward()
 
         # get fake image from generator
-        fake_batch = net_g(torch.randn(batch_size, z_dim, 1, 1, device=device))
+        fake_batch = net_g(torch.randn(batch_size, z_dim, 1, 1, 1, device=device))
         # train D with fake
         d_out_fake = net_d(fake_batch.detach())
         loss_d_fake = criterion(d_out_fake, fake_labels)
