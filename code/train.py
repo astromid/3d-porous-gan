@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-import torchvision.utils as vutils
 from ignite.contrib.handlers import ProgressBar
 from ignite.engine import Engine, Events
 from ignite.handlers import ModelCheckpoint, Timer
@@ -17,10 +16,11 @@ from ignite.metrics import RunningAverage
 from torch import optim
 from torch.utils.data import DataLoader
 from torchsummary import summary
+
 from dataset import HDF5ImageDataset
 from models import Discriminator, Generator
 from utils import D_CHECKPOINT_NAME, G_CHECKPOINT_NAME
-from utils import fix_random_seed
+from utils import fix_random_seed, save_hdf5
 
 mpl.use('agg')
 # smoothing coefficient
@@ -73,7 +73,7 @@ def train_gan(
     """
     seed = fix_random_seed(seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    # logger.info(f"Train started with seed: {seed}")
+    logger.info(f"Train started with seed: {seed}")
     dataset = HDF5ImageDataset(image_dir=data_dir)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
     img_size = dataset.shape[-1]
@@ -186,7 +186,7 @@ def train_gan(
             columns = engine.state.metrics.keys()
             values = [str(round(value, 5)) for value in engine.state.metrics.values()]
 
-            with open(str(fname), 'a') as f:
+            with fname.open(mode='a') as f:
                 if f.tell() == 0:
                     print('\t'.join(columns), file=f)
                 print('\t'.join(values), file=f)
@@ -201,13 +201,15 @@ def train_gan(
     def save_fake_example(engine):
         fake = net_g(fixed_noise)
         path = experiment_dir / FAKE_IMG_FNAME.format(engine.state.epoch)
-        vutils.save_image(fake.detach(), path, normalize=True)
+        save_hdf5(fake.detach(), path)
+        # vutils.save_image(fake.detach(), path, normalize=True)
 
     @trainer.on(Events.EPOCH_COMPLETED)
     def save_real_example(engine):
         img, y = engine.state.batch
         path = experiment_dir / REAL_IMG_FNAME.format(engine.state.epoch)
-        vutils.save_image(img, path, normalize=True)
+        save_hdf5(img, path)
+        # vutils.save_image(img, path, normalize=True)
 
     trainer.add_event_handler(
         event_name=Events.EPOCH_COMPLETED,
