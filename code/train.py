@@ -5,8 +5,8 @@ from typing import Dict, Optional
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
+import seaborn as sns
 import torch
 import torch.nn as nn
 from ignite.contrib.handlers import ProgressBar
@@ -23,16 +23,16 @@ from utils import D_CHECKPOINT_NAME, G_CHECKPOINT_NAME
 from utils import fix_random_seed, save_hdf5
 
 mpl.use('agg')
+sns.set()
 # smoothing coefficient
 ALPHA = 0.98
 PRINT_FREQ = 100
 # checkpoint filenames prefix
-CKPT_PREFIX = 'ckpt'
-FAKE_IMG_FNAME = 'fake_ep{:04d}.png'
-REAL_IMG_FNAME = 'real_ep{:04d}.png'
+CKPT_PREFIX = 'checkpoint'
+FAKE_IMG_FNAME = 'fake_ep{:04d}.hdf5'
+REAL_IMG_FNAME = 'real_ep{:04d}.hdf5'
 LOGS_FNAME = 'logs.tsv'
-PLOT_FNAME = 'plot.svg'
-SAMPLES_FNAME = 'samples.svg'
+PLOT_FNAME = 'plot.png'
 
 
 def train_gan(
@@ -76,6 +76,7 @@ def train_gan(
     logger.info(f"Train started with seed: {seed}")
     dataset = HDF5ImageDataset(image_dir=data_dir)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
+    iterations = epochs * len(loader)
     img_size = dataset.shape[-1]
     num_channels = dataset.shape[0]
 
@@ -183,17 +184,17 @@ def train_gan(
     def print_logs(engine):
         if (engine.state.iteration - 1) % PRINT_FREQ == 0:
             fname = experiment_dir / LOGS_FNAME
-            columns = engine.state.metrics.keys()
-            values = [str(round(value, 5)) for value in engine.state.metrics.values()]
+            columns = ['iter'] + list(engine.state.metrics.keys())
+            values = [str(engine.state.iteration)] + [str(round(value, 5)) for value in engine.state.metrics.values()]
 
             with fname.open(mode='a') as f:
                 if f.tell() == 0:
                     print('\t'.join(columns), file=f)
                 print('\t'.join(values), file=f)
 
-            message = f"[{engine.state.epoch}/{epochs}][{engine.state.iteration % len(loader)}/{len(loader)}]"
-            for name, value in zip(columns, values):
-                message += f" | {name}: {value}"
+            message = f"[{engine.state.epoch}/{epochs}][{engine.state.iteration:04d}/{iterations}]"
+            for name, value in zip(engine.state.metrics.keys(), engine.state.metrics.values()):
+                message += f" | {name}: {value:0.4f}"
 
             pbar.log_message(message)
 
@@ -206,7 +207,7 @@ def train_gan(
 
     @trainer.on(Events.EPOCH_COMPLETED)
     def save_real_example(engine):
-        img, y = engine.state.batch
+        img = engine.state.batch
         path = experiment_dir / REAL_IMG_FNAME.format(engine.state.epoch)
         save_hdf5(img, path)
         # vutils.save_image(img, path, normalize=True)
@@ -232,12 +233,21 @@ def train_gan(
     @trainer.on(Events.EPOCH_COMPLETED)
     def create_plots(engine):
         df = pd.read_csv(experiment_dir / LOGS_FNAME, delimiter='\t')
-        x = np.arange(1, engine.state.iteration + 1, PRINT_FREQ)
-        _ = df.plot(x=x, subplots=True, figsize=(20, 20))
-        _ = plt.xlabel('Iteration number')
-        fig = plt.gcf()
-        path = experiment_dir / PLOT_FNAME
-        fig.savefig(path)
+        fig_1 = plt.figure(figsize=(18, 12))
+        plt.plot(df['iter'], df['loss_d'], label='loss_d')
+        plt.plot(df['iter'], df['loss_g'], label='loss_g')
+        # _ = df[['loss_d', 'loss_g']].plot()
+        plt.xlabel('Iteration number')
+        plt.legend()
+        fig_1.savefig(experiment_dir / ('loss_' + PLOT_FNAME))
+        fig_2 = plt.figure(figsize=(18, 12))
+        plt.plot(df['iter'], df['D_x'], label='D_x')
+        plt.plot(df['iter'], df['D_G_z1'], label='D_G_z1')
+        plt.plot(df['iter'], df['D_G_z2'], label='D_G_z2')
+        # _ = df[['D_x', 'D_G_z1', 'D_G_z2']].plot()
+        plt.xlabel('Iteration number')
+        plt.legend()
+        fig_2.savefig(experiment_dir / PLOT_FNAME)
 
     @trainer.on(Events.EXCEPTION_RAISED)
     def handle_exception(engine, e):

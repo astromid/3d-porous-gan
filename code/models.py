@@ -245,5 +245,4 @@ class Discriminator(GANModule):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         output = self.net(x)
-        # squeeze(1) ?
-        return output.view(-1, 1)
+        return output.view(-1, 1).squeeze(1)
