@@ -21,6 +21,7 @@ from dataset import HDF5ImageDataset
 from models import Discriminator, Generator
 from utils import D_CHECKPOINT_NAME, G_CHECKPOINT_NAME
 from utils import fix_random_seed, save_hdf5
+from minkowski import MinkowskiMeasures
 
 mpl.use('agg')
 sns.set()
@@ -113,7 +114,10 @@ def train_gan(
     # labels smoothing
     real_labels = torch.full((batch_size, ), fill_value=0.9, device=device)
     fake_labels = torch.zeros((batch_size, ), device=device)
-    fixed_noise = torch.randn(batch_size, z_dim, 1, 1, 1, device=device)
+    fixed_noise = torch.randn(1, z_dim, 1, 1, 1, device=device)
+
+    # minkowski measurements
+    minkowski = MinkowskiMeasures()
 
     def step(engine: Engine, batch: torch.Tensor) -> Dict[str, float]:
         """
@@ -124,20 +128,22 @@ def train_gan(
         :return Dict[str, float]: batch metrics
         """
         batch = batch.to(device)
+        # get batch of fake images from generator
+        fake_batch = net_g(torch.randn(batch_size, z_dim, 1, 1, 1, device=device))
         # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
         net_d.zero_grad()
         # train D with real
         d_out_real = net_d(batch)
         loss_d_real = criterion(d_out_real, real_labels)
-        d_x = d_out_real.mean().item()
+        # mean real probability
+        p_real = d_out_real.mean().item()
         loss_d_real.backward()
 
-        # get fake image from generator
-        fake_batch = net_g(torch.randn(batch_size, z_dim, 1, 1, 1, device=device))
         # train D with fake
         d_out_fake = net_d(fake_batch.detach())
         loss_d_fake = criterion(d_out_fake, fake_labels)
-        d_g_z1 = d_out_fake.mean().item()
+        # mean fake probability
+        p_fake = d_out_fake.mean().item()
         loss_d_fake.backward()
         # gradient update
         loss_d = loss_d_real + loss_d_fake
@@ -147,15 +153,27 @@ def train_gan(
         net_g.zero_grad()
         d_out_fake = net_d(fake_batch)
         loss_g = criterion(d_out_fake, real_labels)
-        d_g_z2 = d_out_fake.mean().item()
+        # mean fake generator probability
+        p_gen = d_out_fake.mean().item()
         loss_g.backward()
         optimizer_g.step()
+
+        # minkowski functional measures
+        cube = net_g(fixed_noise).detach().cpu()
+        path = experiment_dir / FAKE_IMG_FNAME.format(engine.state.epoch)
+        save_hdf5(cube, path)
+        cube = cube.mul(0.5).add(0.5).numpy()
+        v, s, b, xi = minkowski.compute_features(cube)
         return {
             'loss_d': loss_d.item(),
             'loss_g': loss_g.item(),
-            'D_x': d_x,
-            'D_G_z1': d_g_z1,
-            'D_G_z2': d_g_z2
+            'p_real': p_real,
+            'p_fake': p_fake,
+            'p_gen': p_gen,
+            'V': v,
+            'S': s,
+            'B': b,
+            'Xi': xi
         }
     # ignite objects
     trainer = Engine(step)
@@ -169,12 +187,16 @@ def train_gan(
     timer = Timer(average=True)
 
     # attach running average metrics
-    monitoring_metrics = ['loss_d', 'loss_g', 'D_x', 'D_G_z1', 'D_G_z2']
+    monitoring_metrics = ['loss_d', 'loss_g', 'p_real', 'p_fake', 'p_gen']
     RunningAverage(alpha=ALPHA, output_transform=lambda x: x['loss_d']).attach(trainer, 'loss_d')
     RunningAverage(alpha=ALPHA, output_transform=lambda x: x['loss_g']).attach(trainer, 'loss_g')
-    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['D_x']).attach(trainer, 'D_x')
-    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['D_G_z1']).attach(trainer, 'D_G_z1')
-    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['D_G_z2']).attach(trainer, 'D_G_z2')
+    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['p_real']).attach(trainer, 'p_real')
+    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['p_fake']).attach(trainer, 'p_fake')
+    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['p_gen']).attach(trainer, 'p_gen')
+    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['V']).attach(trainer, 'V')
+    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['S']).attach(trainer, 'S')
+    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['B']).attach(trainer, 'B')
+    RunningAverage(alpha=ALPHA, output_transform=lambda x: x['Xi']).attach(trainer, 'Xi')
 
     # attach progress bar
     pbar = ProgressBar()
@@ -205,12 +227,12 @@ def train_gan(
         save_hdf5(fake.detach(), path)
         # vutils.save_image(fake.detach(), path, normalize=True)
 
-    @trainer.on(Events.EPOCH_COMPLETED)
-    def save_real_example(engine):
-        img = engine.state.batch
-        path = experiment_dir / REAL_IMG_FNAME.format(engine.state.epoch)
-        save_hdf5(img, path)
-        # vutils.save_image(img, path, normalize=True)
+    # @trainer.on(Events.EPOCH_COMPLETED)
+    # def save_real_example(engine):
+    #     img = engine.state.batch
+    #     path = experiment_dir / REAL_IMG_FNAME.format(engine.state.epoch)
+    #     save_hdf5(img, path)
+    #     # vutils.save_image(img, path, normalize=True)
 
     trainer.add_event_handler(
         event_name=Events.EPOCH_COMPLETED,

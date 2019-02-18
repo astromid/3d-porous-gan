@@ -7,23 +7,24 @@ import numpy as np
 
 class MinkowskiMeasures:
     def __init__(self, path_to_dict="comb_to_update.p"):
-        if isfile(path_to_dict):
-            print("Found precomputed dictionary, using fast computation")
-            self.dict = pickle.load(open(path_to_dict, "rb"))
-            self.fast_flag = True
-        else:
-            response = "none"
-            while response.lower() not in ["yes, y, no, n"]:
-                response = input("No dictionary found, generate? (Y/N): ")
-            if response in ["yes", "y"]:
-                rectangles = self.gen_3d((3, 3, 2))
-                self.dict = {}
-                for rect in rectangles:
-                    self.dict[tuple(rect.flatten())] = self.update_voxel(rect)
-                print("Dictionary computed, using fast computation")
-                self.fast_flag = True
-            else:
-                self.fast_flag = False
+        self.fast_flag = False
+        # if isfile(path_to_dict):
+        #     print("Found precomputed dictionary, using fast computation")
+        #     self.dict = pickle.load(open(path_to_dict, "rb"))
+        #     self.fast_flag = True
+        # else:
+        #     response = "none"
+        #     while response.lower() not in ['yes', 'y', 'no', 'n']:
+        #         response = input("No dictionary found, generate? (Y/N): ")
+        #     if response in ["yes", "y"]:
+        #         rectangles = self.gen_3d((3, 3, 2))
+        #         self.dict = {}
+        #         for rect in rectangles:
+        #             self.dict[tuple(rect.flatten())] = self.update_voxel(rect)
+        #         print("Dictionary computed, using fast computation")
+        #         self.fast_flag = True
+        #     else:
+        #         self.fast_flag = False
 
     @staticmethod
     def pad_cube(cube):
@@ -39,7 +40,9 @@ class MinkowskiMeasures:
             features = self.__compute_features_fast(cube)
         else:
             features = self.__compute_features(cube)
-        return features
+        volume = cube.shape[0] * cube.shape[1] * cube.shape[2]
+        norm_features = [feature / volume for feature in features]
+        return norm_features
 
     def __compute_features(self, cube):
         """Minkowski feature computation without precomputed updates. Works much slower

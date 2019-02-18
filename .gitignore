@@ -105,7 +105,10 @@ venv.bak/
 
 # data
 *.tiff
+*.tif
 *.hdf5
+*.png
+*.jpg
 
 # pytorch models
 *.pth
