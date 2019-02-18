@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3078afa4-3238-4bc3-9087-0da96dd82b1f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/minkowski_measures.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/minkowski.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/train.py" afterDir="false" />
-    </list>
+    <list default="true" id="3078afa4-3238-4bc3-9087-0da96dd82b1f" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +30,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/code/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="638">
+            <state relative-caret-position="-378">
               <caret line="165" column="54" selection-start-line="165" selection-start-column="54" selection-end-line="165" selection-end-column="54" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
@@ -60,7 +55,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/code/experiment.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
+            <state relative-caret-position="234">
               <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
@@ -186,12 +181,12 @@
       <workItem from="1547830249416" duration="2000" />
       <workItem from="1548685010967" duration="3795000" />
       <workItem from="1549992728029" duration="1233000" />
-      <workItem from="1550490808985" duration="5060000" />
+      <workItem from="1550490808985" duration="6237000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72804000" />
+    <option name="totallyTimeSpent" value="73981000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -340,16 +335,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/code/experiment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="751">
@@ -400,9 +385,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/code/experiment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/code/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
+        <state relative-caret-position="-378">
           <caret line="165" column="54" selection-start-line="165" selection-start-column="54" selection-end-line="165" selection-end-column="54" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />

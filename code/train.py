@@ -159,7 +159,7 @@ def train_gan(
         optimizer_g.step()
 
         # minkowski functional measures
-        cube = net_g(fixed_noise).detach().cpu()
+        cube = net_g(fixed_noise).detach().squeeze().cpu()
         path = experiment_dir / FAKE_IMG_FNAME.format(engine.state.epoch)
         save_hdf5(cube, path)
         cube = cube.mul(0.5).add(0.5).numpy()
