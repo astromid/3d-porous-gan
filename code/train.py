@@ -1,3 +1,4 @@
+import pickle
 import warnings
 from logging import Logger
 from pathlib import Path
@@ -18,16 +19,16 @@ from torch.utils.data import DataLoader
 from torchsummary import summary
 
 from dataset import HDF5ImageDataset
+from minkowski import compute_minkowski
 from models import Discriminator, Generator
 from utils import D_CHECKPOINT_NAME, G_CHECKPOINT_NAME
-from utils import fix_random_seed, save_hdf5
-from minkowski import MinkowskiMeasures
+from utils import fix_random_seed, postprocess_cube
 
 mpl.use('agg')
 sns.set()
 # smoothing coefficient
 ALPHA = 0.98
-PRINT_FREQ = 100
+PRINT_FREQ = 30
 # checkpoint filenames prefix
 CKPT_PREFIX = 'checkpoint'
 FAKE_IMG_FNAME = 'fake_ep{:04d}.hdf5'
@@ -51,7 +52,8 @@ def train_gan(
         saved_d: bool = False,
         seed: Optional[int] = None,
         g_extra_layers: int = 0,
-        d_extra_layers: int = 0
+        d_extra_layers: int = 0,
+        g_iter: int = 2
 ) -> None:
     """
     Perform GAN training
@@ -70,6 +72,7 @@ def train_gan(
     :param Optional[int] seed:
     :param int g_extra_layers:
     :param int d_extra_layers:
+    :param int g_iter:
     :return:
     """
     seed = fix_random_seed(seed)
@@ -116,9 +119,6 @@ def train_gan(
     fake_labels = torch.zeros((batch_size, ), device=device)
     fixed_noise = torch.randn(1, z_dim, 1, 1, 1, device=device)
 
-    # minkowski measurements
-    minkowski = MinkowskiMeasures()
-
     def step(engine: Engine, batch: torch.Tensor) -> Dict[str, float]:
         """
         Train step function
@@ -150,20 +150,22 @@ def train_gan(
         optimizer_d.step()
 
         # (2) Update G network: maximize log(D(G(z)))
-        net_g.zero_grad()
-        d_out_fake = net_d(fake_batch)
-        loss_g = criterion(d_out_fake, real_labels)
-        # mean fake generator probability
-        p_gen = d_out_fake.mean().item()
-        loss_g.backward()
-        optimizer_g.step()
+        loss_g = 0
+        p_gen = 0
+        for _ in range(g_iter):
+            net_g.zero_grad()
+            d_out_fake = net_d(fake_batch)
+            loss_g = criterion(d_out_fake, real_labels)
+            # mean fake generator probability
+            p_gen = d_out_fake.mean().item()
+            loss_g.backward(retain_graph=True)
+            optimizer_g.step()
 
         # minkowski functional measures
         cube = net_g(fixed_noise).detach().squeeze().cpu()
-        path = experiment_dir / FAKE_IMG_FNAME.format(engine.state.epoch)
-        save_hdf5(cube, path)
         cube = cube.mul(0.5).add(0.5).numpy()
-        v, s, b, xi = minkowski.compute_features(cube)
+        cube = postprocess_cube(cube)
+        v, s, b, xi = compute_minkowski(cube)
         return {
             'loss_d': loss_d.item(),
             'loss_g': loss_g.item(),
@@ -187,7 +189,7 @@ def train_gan(
     timer = Timer(average=True)
 
     # attach running average metrics
-    monitoring_metrics = ['loss_d', 'loss_g', 'p_real', 'p_fake', 'p_gen']
+    monitoring_metrics = ['loss_d', 'loss_g', 'p_real', 'p_fake', 'p_gen', 'V', 'S', 'B', 'Xi']
     RunningAverage(alpha=ALPHA, output_transform=lambda x: x['loss_d']).attach(trainer, 'loss_d')
     RunningAverage(alpha=ALPHA, output_transform=lambda x: x['loss_g']).attach(trainer, 'loss_g')
     RunningAverage(alpha=ALPHA, output_transform=lambda x: x['p_real']).attach(trainer, 'p_real')
@@ -220,12 +222,12 @@ def train_gan(
 
             pbar.log_message(message)
 
-    @trainer.on(Events.EPOCH_COMPLETED)
-    def save_fake_example(engine):
-        fake = net_g(fixed_noise)
-        path = experiment_dir / FAKE_IMG_FNAME.format(engine.state.epoch)
-        save_hdf5(fake.detach(), path)
-        # vutils.save_image(fake.detach(), path, normalize=True)
+    # @trainer.on(Events.EPOCH_COMPLETED)
+    # def save_fake_example(engine):
+    #     fake = net_g(fixed_noise)
+    #     path = experiment_dir / FAKE_IMG_FNAME.format(engine.state.epoch)
+    #     save_hdf5(fake.detach(), path)
+    #     # vutils.save_image(fake.detach(), path, normalize=True)
 
     # @trainer.on(Events.EPOCH_COMPLETED)
     # def save_real_example(engine):
@@ -258,18 +260,35 @@ def train_gan(
         fig_1 = plt.figure(figsize=(18, 12))
         plt.plot(df['iter'], df['loss_d'], label='loss_d')
         plt.plot(df['iter'], df['loss_g'], label='loss_g')
-        # _ = df[['loss_d', 'loss_g']].plot()
         plt.xlabel('Iteration number')
         plt.legend()
         fig_1.savefig(experiment_dir / ('loss_' + PLOT_FNAME))
         fig_2 = plt.figure(figsize=(18, 12))
-        plt.plot(df['iter'], df['D_x'], label='D_x')
-        plt.plot(df['iter'], df['D_G_z1'], label='D_G_z1')
-        plt.plot(df['iter'], df['D_G_z2'], label='D_G_z2')
-        # _ = df[['D_x', 'D_G_z1', 'D_G_z2']].plot()
+        plt.plot(df['iter'], df['p_real'], label='p_real')
+        plt.plot(df['iter'], df['p_fake'], label='p_fake')
+        plt.plot(df['iter'], df['p_gen'], label='p_gen')
         plt.xlabel('Iteration number')
         plt.legend()
         fig_2.savefig(experiment_dir / PLOT_FNAME)
+        fig_3 = plt.figure(figsize=(18, 12))
+        # ------------------------------------
+        minkowski = pickle.load((data_dir / 'minkowski.pkl').open(mode='rb'))
+        desired_v = [minkowski[0]] * len(df['iter'])
+        desired_s = [minkowski[1]] * len(df['iter'])
+        desired_b = [minkowski[2]] * len(df['iter'])
+        desired_xi = [minkowski[3]] * len(df['iter'])
+        # ------------------------------------
+        plt.plot(df['iter'], df['V'], label='V', color='b')
+        plt.plot(df['iter'], desired_v, color='b', linestyle='dashed')
+        plt.plot(df['iter'], df['S'], label='S', color='r')
+        plt.plot(df['iter'], desired_s, color='r', linestyle='dashed')
+        plt.plot(df['iter'], df['B'], label='B', color='g')
+        plt.plot(df['iter'], desired_b, color='g', linestyle='dashed')
+        plt.plot(df['iter'], df['Xi'], label='Xi', color='y')
+        plt.plot(df['iter'], desired_xi, color='y', linestyle='dashed')
+        plt.xlabel('Iteration number')
+        plt.legend()
+        fig_3.savefig(experiment_dir / ('minkowski_' + PLOT_FNAME))
 
     @trainer.on(Events.EXCEPTION_RAISED)
     def handle_exception(engine, e):

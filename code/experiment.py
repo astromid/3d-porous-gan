@@ -16,7 +16,8 @@ if __name__ == '__main__':
         z_dim=512,
         g_filters=64,
         d_filters=64,
-        learning_rate=2e-5,
+        learning_rate=2e-4,
         beta_1=0.5,
-        epochs=250
+        epochs=100,
+        g_iter=3
     )
