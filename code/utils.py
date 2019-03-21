@@ -36,10 +36,10 @@ def save_hdf5(tensor: torch.Tensor, path: Path) -> NoReturn:
     :param path:
     """
     tensor = tensor.cpu()
-    numpy_arr = tensor.mul(0.5).add(0.5).byte().numpy()
+    numpy_arr = tensor.mul(0.5).add(0.5).numpy()
     numpy_arr = postprocess_cube(numpy_arr) * 255
     with h5py.File(path, 'w') as f:
-        f.create_dataset('data', data=numpy_arr, dtype="i8", compression="gzip")
+        f.create_dataset('data', data=numpy_arr, dtype='u1', compression="gzip")
 
 
 def postprocess_cube(cube: np.ndarray) -> np.ndarray:

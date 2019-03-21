@@ -104,6 +104,7 @@ venv.bak/
 .mypy_cache/
 
 # data
+data/*
 *.tiff
 *.tif
 *.hdf5
@@ -112,3 +113,10 @@ venv.bak/
 
 # pytorch models
 *.pth
+# experiments
+experiments/*
+# TEX
+*.toc
+*.gz
+*.aux
+*.log
