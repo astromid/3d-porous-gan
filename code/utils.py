@@ -46,7 +46,7 @@ def postprocess_cube(cube: np.ndarray) -> np.ndarray:
     # singe pixel denoise
     cube = median_filter(cube, size=(3, 3, 3))
     # cut edge noise
-    edge = int(0.1 * cube.shape[0])
+    edge = int(0.05 * cube.shape[0])
     cube = cube[edge:-edge, edge:-edge, edge:-edge]
     # threshold image
     threshold_global_otsu = threshold_otsu(cube)

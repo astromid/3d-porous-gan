@@ -18,6 +18,6 @@ if __name__ == '__main__':
         d_filters=64,
         learning_rate=2e-4,
         beta_1=0.5,
-        epochs=100,
-        g_iter=3
+        epochs=150,
+        scheduler=True
     )

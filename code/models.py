@@ -1,9 +1,9 @@
 from abc import abstractmethod
-from math import log2
 from typing import NoReturn
 
 import torch
 import torch.nn as nn
+from math import log2
 
 
 class GANModule(nn.Module):
@@ -219,7 +219,7 @@ class Discriminator(GANModule):
                 name=str(layers_counter+1),
                 module=nn.BatchNorm3d(num_features=num_filters*2)
             )
-            self.add_module(
+            self.net.add_module(
                 name=str(layers_counter+2),
                 module=nn.LeakyReLU(negative_slope=0.2, inplace=True)
             )

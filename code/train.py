@@ -12,7 +12,7 @@ import torch
 import torch.nn as nn
 from ignite.contrib.handlers import ProgressBar
 from ignite.engine import Engine, Events
-from ignite.handlers import ModelCheckpoint, Timer
+from ignite.handlers import ModelCheckpoint
 from ignite.metrics import RunningAverage
 from torch import optim
 from torch.utils.data import DataLoader
@@ -28,7 +28,7 @@ mpl.use('agg')
 sns.set()
 # smoothing coefficient
 ALPHA = 0.98
-PRINT_FREQ = 30
+PRINT_FREQ = 50
 # checkpoint filenames prefix
 CKPT_PREFIX = 'checkpoint'
 FAKE_IMG_FNAME = 'fake_ep{:04d}.hdf5'
@@ -53,33 +53,15 @@ def train_gan(
         seed: Optional[int] = None,
         g_extra_layers: int = 0,
         d_extra_layers: int = 0,
-        g_iter: int = 2
+        scheduler: bool = False
 ) -> None:
-    """
-    Perform GAN training
-    :param Logger logger:
-    :param Path experiment_dir:
-    :param Path data_dir:
-    :param int batch_size:
-    :param int z_dim:
-    :param int g_filters:
-    :param int d_filters:
-    :param float learning_rate:
-    :param float beta_1:
-    :param int epochs:
-    :param bool saved_g:
-    :param bool saved_d:
-    :param Optional[int] seed:
-    :param int g_extra_layers:
-    :param int d_extra_layers:
-    :param int g_iter:
-    :return:
-    """
     seed = fix_random_seed(seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     logger.info(f"Train started with seed: {seed}")
     dataset = HDF5ImageDataset(image_dir=data_dir)
-    loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
+    desired_minkowski = pickle.load((data_dir / 'minkowski.pkl').open(mode='rb'))
+
+    loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True, pin_memory=True)
     iterations = epochs * len(loader)
     img_size = dataset.shape[-1]
     num_channels = dataset.shape[0]
@@ -114,6 +96,10 @@ def train_gan(
     optimizer_g = optim.Adam(net_g.parameters(), lr=learning_rate, betas=(beta_1, 0.999))
     optimizer_d = optim.Adam(net_d.parameters(), lr=learning_rate, betas=(beta_1, 0.999))
 
+    patience = int(4500 / len(loader))
+    scheduler_g = optim.lr_scheduler.ReduceLROnPlateau(optimizer_g, min_lr=1e-6, verbose=True, patience=patience)
+    scheduler_d = optim.lr_scheduler.ReduceLROnPlateau(optimizer_d, min_lr=1e-6, verbose=True, patience=patience)
+
     # labels smoothing
     real_labels = torch.full((batch_size, ), fill_value=0.9, device=device)
     fake_labels = torch.zeros((batch_size, ), device=device)
@@ -123,42 +109,39 @@ def train_gan(
         """
         Train step function
 
-        :param Engine engine: pytorch ignite train engine
-        :param torch.Tensor batch: batch to process
-        :return Dict[str, float]: batch metrics
+        :param engine: pytorch ignite train engine
+        :param batch: batch to process
+        :return batch metrics
         """
-        batch = batch.to(device)
         # get batch of fake images from generator
         fake_batch = net_g(torch.randn(batch_size, z_dim, 1, 1, 1, device=device))
-        # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
-        net_d.zero_grad()
-        # train D with real
+        # 1. Update D network: maximize log(D(x)) + log(1 - D(G(z)))
+        batch = batch.to(device)
+        optimizer_d.zero_grad()
+        # train D with real and fake batches
         d_out_real = net_d(batch)
-        loss_d_real = criterion(d_out_real, real_labels)
-        # mean real probability
-        p_real = d_out_real.mean().item()
-        loss_d_real.backward()
-
-        # train D with fake
         d_out_fake = net_d(fake_batch.detach())
+        loss_d_real = criterion(d_out_real, real_labels)
         loss_d_fake = criterion(d_out_fake, fake_labels)
-        # mean fake probability
+        # mean probabilities
+        p_real = d_out_real.mean().item()
         p_fake = d_out_fake.mean().item()
-        loss_d_fake.backward()
-        # gradient update
-        loss_d = loss_d_real + loss_d_fake
+
+        loss_d = (loss_d_real + loss_d_fake) / 2
+        loss_d.backward()
         optimizer_d.step()
 
-        # (2) Update G network: maximize log(D(G(z)))
-        loss_g = 0
-        p_gen = 0
-        for _ in range(g_iter):
-            net_g.zero_grad()
+        # 2. Update G network: maximize log(D(G(z)))
+        loss_g = None
+        p_gen = None
+        for _ in range(2):
+            fake_batch = net_g(torch.randn(batch_size, z_dim, 1, 1, 1, device=device))
+            optimizer_g.zero_grad()
             d_out_fake = net_d(fake_batch)
             loss_g = criterion(d_out_fake, real_labels)
             # mean fake generator probability
             p_gen = d_out_fake.mean().item()
-            loss_g.backward(retain_graph=True)
+            loss_g.backward()
             optimizer_g.step()
 
         # minkowski functional measures
@@ -183,10 +166,9 @@ def train_gan(
         dirname=str(experiment_dir),
         filename_prefix=CKPT_PREFIX,
         save_interval=5,
-        n_saved=5,
+        n_saved=10,
         require_empty=False
     )
-    timer = Timer(average=True)
 
     # attach running average metrics
     monitoring_metrics = ['loss_d', 'loss_g', 'p_real', 'p_fake', 'p_gen', 'V', 'S', 'B', 'Xi']
@@ -209,7 +191,7 @@ def train_gan(
         if (engine.state.iteration - 1) % PRINT_FREQ == 0:
             fname = experiment_dir / LOGS_FNAME
             columns = ['iter'] + list(engine.state.metrics.keys())
-            values = [str(engine.state.iteration)] + [str(round(value, 5)) for value in engine.state.metrics.values()]
+            values = [str(engine.state.iteration)] + [str(round(value, 7)) for value in engine.state.metrics.values()]
 
             with fname.open(mode='a') as f:
                 if f.tell() == 0:
@@ -218,77 +200,90 @@ def train_gan(
 
             message = f"[{engine.state.epoch}/{epochs}][{engine.state.iteration:04d}/{iterations}]"
             for name, value in zip(engine.state.metrics.keys(), engine.state.metrics.values()):
-                message += f" | {name}: {value:0.4f}"
+                message += f" | {name}: {value:0.5f}"
 
             pbar.log_message(message)
-
-    # @trainer.on(Events.EPOCH_COMPLETED)
-    # def save_fake_example(engine):
-    #     fake = net_g(fixed_noise)
-    #     path = experiment_dir / FAKE_IMG_FNAME.format(engine.state.epoch)
-    #     save_hdf5(fake.detach(), path)
-    #     # vutils.save_image(fake.detach(), path, normalize=True)
-
-    # @trainer.on(Events.EPOCH_COMPLETED)
-    # def save_real_example(engine):
-    #     img = engine.state.batch
-    #     path = experiment_dir / REAL_IMG_FNAME.format(engine.state.epoch)
-    #     save_hdf5(img, path)
-    #     # vutils.save_image(img, path, normalize=True)
 
     trainer.add_event_handler(
         event_name=Events.EPOCH_COMPLETED,
         handler=checkpoint_handler,
         to_save={'net_g': net_g, 'net_d': net_d})
 
-    timer.attach(
-        trainer,
-        start=Events.EPOCH_STARTED,
-        resume=Events.ITERATION_STARTED,
-        pause=Events.ITERATION_COMPLETED,
-        step=Events.ITERATION_COMPLETED
-    )
-
-    @trainer.on(Events.EPOCH_COMPLETED)
-    def print_times(engine):
-        pbar.log_message(f"Epoch {engine.state.epoch} done. Time per batch: {timer.value():.3f}[s]")
-        timer.reset()
-
     @trainer.on(Events.EPOCH_COMPLETED)
     def create_plots(engine):
         df = pd.read_csv(experiment_dir / LOGS_FNAME, delimiter='\t')
+
         fig_1 = plt.figure(figsize=(18, 12))
-        plt.plot(df['iter'], df['loss_d'], label='loss_d')
+        plt.plot(df['iter'], df['loss_d'], label='loss_d', linestyle='dashed')
         plt.plot(df['iter'], df['loss_g'], label='loss_g')
         plt.xlabel('Iteration number')
         plt.legend()
         fig_1.savefig(experiment_dir / ('loss_' + PLOT_FNAME))
+        plt.close(fig_1)
+
         fig_2 = plt.figure(figsize=(18, 12))
-        plt.plot(df['iter'], df['p_real'], label='p_real')
-        plt.plot(df['iter'], df['p_fake'], label='p_fake')
+        plt.plot(df['iter'], df['p_real'], label='p_real', linestyle='dashed')
+        plt.plot(df['iter'], df['p_fake'], label='p_fake', linestyle='dashdot')
         plt.plot(df['iter'], df['p_gen'], label='p_gen')
         plt.xlabel('Iteration number')
         plt.legend()
         fig_2.savefig(experiment_dir / PLOT_FNAME)
+        plt.close(fig_2)
+
+        desired_v = [desired_minkowski[0]] * len(df['iter'])
+        desired_s = [desired_minkowski[1]] * len(df['iter'])
+        desired_b = [desired_minkowski[2]] * len(df['iter'])
+        desired_xi = [desired_minkowski[3]] * len(df['iter'])
+
         fig_3 = plt.figure(figsize=(18, 12))
-        # ------------------------------------
-        minkowski = pickle.load((data_dir / 'minkowski.pkl').open(mode='rb'))
-        desired_v = [minkowski[0]] * len(df['iter'])
-        desired_s = [minkowski[1]] * len(df['iter'])
-        desired_b = [minkowski[2]] * len(df['iter'])
-        desired_xi = [minkowski[3]] * len(df['iter'])
-        # ------------------------------------
         plt.plot(df['iter'], df['V'], label='V', color='b')
         plt.plot(df['iter'], desired_v, color='b', linestyle='dashed')
+        plt.xlabel('Iteration number')
+        plt.ylabel('Minkowski functional V')
+        plt.legend()
+        fig_3.savefig(experiment_dir / ('minkowski_V_' + PLOT_FNAME))
+        plt.close(fig_3)
+
+        fig_4 = plt.figure(figsize=(18, 12))
         plt.plot(df['iter'], df['S'], label='S', color='r')
         plt.plot(df['iter'], desired_s, color='r', linestyle='dashed')
+        plt.xlabel('Iteration number')
+        plt.ylabel('Minkowski functional S')
+        plt.legend()
+        fig_4.savefig(experiment_dir / ('minkowski_S_' + PLOT_FNAME))
+        plt.close(fig_4)
+
+        fig_5 = plt.figure(figsize=(18, 12))
         plt.plot(df['iter'], df['B'], label='B', color='g')
         plt.plot(df['iter'], desired_b, color='g', linestyle='dashed')
+        plt.xlabel('Iteration number')
+        plt.ylabel('Minkowski functional B')
+        plt.legend()
+        fig_5.savefig(experiment_dir / ('minkowski_B_' + PLOT_FNAME))
+        plt.close(fig_5)
+
+        fig_6 = plt.figure(figsize=(18, 12))
         plt.plot(df['iter'], df['Xi'], label='Xi', color='y')
         plt.plot(df['iter'], desired_xi, color='y', linestyle='dashed')
         plt.xlabel('Iteration number')
+        plt.ylabel('Minkowski functional Xi')
         plt.legend()
-        fig_3.savefig(experiment_dir / ('minkowski_' + PLOT_FNAME))
+        fig_6.savefig(experiment_dir / ('minkowski_Xi_' + PLOT_FNAME))
+        plt.close(fig_6)
+
+    if scheduler:
+        @trainer.on(Events.EPOCH_COMPLETED)
+        def lr_scheduler(engine):
+            desired_b = desired_minkowski[2]
+            desired_xi = desired_minkowski[3]
+
+            current_b = engine.state.metrics['B']
+            current_xi = engine.state.metrics['Xi']
+
+            delta = abs(desired_b - current_b) + abs(desired_xi - current_xi)
+
+            scheduler_d.step(delta)
+            scheduler_g.step(delta)
 
     @trainer.on(Events.EXCEPTION_RAISED)
     def handle_exception(engine, e):

@@ -6,12 +6,15 @@
       <w>conv</w>
       <w>convolutional</w>
       <w>cuda</w>
+      <w>dashdot</w>
       <w>dcgan</w>
       <w>deconvolutional</w>
       <w>fname</w>
       <w>imgf</w>
       <w>minkowski</w>
+      <w>otsu</w>
       <w>pbar</w>
+      <w>pytorch</w>
       <w>voxel</w>
       <w>vutils</w>
     </words>

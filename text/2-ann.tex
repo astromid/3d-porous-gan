@@ -91,7 +91,7 @@
 			Описанный процесс схематично изображен на (Рис. \ref{5-gan-training}).
 	
 			\begin{figure}[h!]
-				\centering{\includegraphics[width=0.4\linewidth]{5-GAN/gan-training}}
+				\centering{\includegraphics[width=0.4\linewidth]{3-ann/gan-training}}
 				\caption{Схематическое изображение процесса обучения GAN.}
 				\label{5-gan-training}
 			\end{figure}
@@ -100,7 +100,7 @@
 			Для решения задачи была опробована модификация обычной структуры GAN под названием ``pix2pix GAN'' \cite{pix2pix, p2p-vessnet}. Ее отличие от схемы GAN, введенной выше, состоит в том, что вместо шума на вход генератору приходят другие изображения, на которых он основывается при синтезе. Схематически ее устройство изображено на (Рис. \ref{5-p2p}).
 	
 			\begin{figure}[h!]
-				\centering{\includegraphics[width=0.75\linewidth]{5-GAN/p2p}}
+				\centering{\includegraphics[width=0.75\linewidth]{3-ann/p2p}}
 				\caption{Схематическое устройство сети pix2pix GAN.}
 				\label{5-p2p}
 			\end{figure}
@@ -113,7 +113,7 @@
 			В качестве генератора в \cite{pix2pix, p2p-vessnet} использовалась сеть ``U-Net'' \cite{unet}. Основное отличие сети ``U-Net'' от обычной сети архитектуры ``encoder-decoder'' заключается в наличии прямых связей между сверточными и разверточными слоями. Использование такого типа генератора позволяло увеличить качество синтезируемых изображений. Схемы сетей типа ``U-Net'' и ``Encoder-decoder'' приведены на (Рис. \ref{5-unet-sheme}).
 			
 			\begin{figure}[h!]
-				\centering{\includegraphics[width=0.5\linewidth]{5-GAN/unet-encoder}}
+				\centering{\includegraphics[width=0.5\linewidth]{3-ann/unet-encoder}}
 				\caption{Схематическое изображение нейросети-генератора.}
 				\label{5-unet-sheme}.
 			\end{figure}

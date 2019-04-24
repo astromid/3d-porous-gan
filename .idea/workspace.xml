@@ -2,19 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3078afa4-3238-4bc3-9087-0da96dd82b1f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dictionaries/astro.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/astro.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/generate.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/generate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/experiment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiments/2019-02-18_21_24/logs.tsv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiments/2019-02-19_11_26/logs.tsv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/0-title.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/0-title.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/1-introduction.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/1-introduction.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/10-conclusion.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/10-conclusion.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/11-supplement.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/11-supplement.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/9-conclusions.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/9-conclusions.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/diploma.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/diploma.tex" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,8 +20,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/code/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="918">
-              <caret line="56" column="33" selection-start-line="56" selection-start-column="33" selection-end-line="56" selection-end-column="33" />
+            <state relative-caret-position="3942">
+              <caret line="224" column="13" selection-start-line="224" selection-start-column="13" selection-end-line="224" selection-end-column="13" />
               <folding>
                 <element signature="e#0#30#0" expanded="true" />
               </folding>
@@ -36,68 +29,19 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/code/dataset.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#24#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/code/minkowski.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="512">
-              <caret line="33" column="35" selection-start-line="33" selection-start-column="35" selection-end-line="33" selection-end-column="35" />
-              <folding>
-                <element signature="e#0#24#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/code/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="332">
-              <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/code/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4140">
-              <caret line="12" column="47" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
-              <folding>
-                <marker date="1553117434526" expanded="true" signature="7835:8127" ph="..." />
-                <marker date="1553117434526" expanded="true" signature="8135:8406" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="859">
-              <caret line="121" column="5" selection-start-line="121" selection-start-column="5" selection-end-line="121" selection-end-column="5" />
+            <state relative-caret-position="324">
+              <caret line="18" column="29" lean-forward="true" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/code/generate.py">
+        <entry file="file://$PROJECT_DIR$/code/analyze.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="25" column="10" lean-forward="true" selection-start-line="25" selection-start-column="10" selection-end-line="25" selection-end-column="10" />
+            <state>
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -106,10 +50,34 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/code/generate.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="396">
+              <caret line="27" selection-start-line="7" selection-end-line="27" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/code/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="630">
+              <caret line="44" column="4" selection-start-line="44" selection-start-column="4" selection-end-line="44" selection-end-column="4" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/code/experiment.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+            <state relative-caret-position="234">
+              <caret line="17" column="20" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="20" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -134,15 +102,16 @@
       <list>
         <option value="$PROJECT_DIR$/code/dataset-paper.py" />
         <option value="$PROJECT_DIR$/code/minkowski_measures.py" />
-        <option value="$PROJECT_DIR$/code/models.py" />
         <option value="$PROJECT_DIR$/code/minkowski.py" />
-        <option value="$PROJECT_DIR$/code/experiment.py" />
-        <option value="$PROJECT_DIR$/code/utils.py" />
         <option value="$PROJECT_DIR$/code/generate.py" />
-        <option value="$PROJECT_DIR$/code/train.py" />
         <option value="$PROJECT_DIR$/code/__init__.py" />
-        <option value="$PROJECT_DIR$/code/dataset.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/code/utils.py" />
+        <option value="$PROJECT_DIR$/code/analyze.py" />
+        <option value="$PROJECT_DIR$/code/dataset.py" />
+        <option value="$PROJECT_DIR$/code/models.py" />
+        <option value="$PROJECT_DIR$/code/train.py" />
+        <option value="$PROJECT_DIR$/code/experiment.py" />
       </list>
     </option>
   </component>
@@ -175,11 +144,6 @@
             <path>
               <item name="3d-porous-gan" type="b2602c69:ProjectViewProjectNode" />
               <item name="3d-porous-gan" type="462c0819:PsiDirectoryNode" />
-              <item name="experiments" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="3d-porous-gan" type="b2602c69:ProjectViewProjectNode" />
-              <item name="3d-porous-gan" type="462c0819:PsiDirectoryNode" />
               <item name="text" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -190,11 +154,15 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.deploy.options" />
+    <property name="settings.editor.selected.configurable" value="web.server" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -253,18 +221,28 @@
       <workItem from="1551720383938" duration="399000" />
       <workItem from="1552497647094" duration="6709000" />
       <workItem from="1553099362087" duration="4490000" />
-      <workItem from="1553162158994" duration="4499000" />
+      <workItem from="1553162158994" duration="7012000" />
+      <workItem from="1553681019389" duration="5198000" />
+      <workItem from="1553784605429" duration="265000" />
+      <workItem from="1554215514077" duration="2939000" />
+      <workItem from="1554281874224" duration="640000" />
+      <workItem from="1555149672561" duration="605000" />
+      <workItem from="1555166181224" duration="6657000" />
+      <workItem from="1555402387015" duration="1599000" />
+      <workItem from="1555577923035" duration="814000" />
+      <workItem from="1555749406006" duration="34000" />
+      <workItem from="1555749552625" duration="135000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="100763000" />
+    <option name="totallyTimeSpent" value="122162000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19296375" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21428572" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -315,77 +293,19 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torch/nn/modules/module.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="158" column="8" selection-start-line="158" selection-start-column="8" selection-end-line="158" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torch/nn/modules/container.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="44" column="8" selection-start-line="44" selection-start-column="8" selection-end-line="44" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torchvision/datasets/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torch/utils/data/dataloader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="401" column="6" selection-start-line="401" selection-start-column="6" selection-end-line="401" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torchvision/transforms/transforms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="130" column="8" selection-start-line="130" selection-start-column="8" selection-end-line="130" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torch/utils/data/dataset.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torch/nn/modules/module.py" />
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torch/nn/modules/container.py" />
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torchvision/datasets/__init__.py" />
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torch/utils/data/dataloader.py" />
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torchvision/transforms/transforms.py" />
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/torch/utils/data/dataset.py" />
     <entry file="file://$PROJECT_DIR$/code/dataset-paper.py" />
     <entry file="file://$PROJECT_DIR$/code/dcgan.py" />
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/ignite/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="17" lean-forward="true" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/ignite/contrib/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/ignite/engine/engine.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="59" column="27" lean-forward="true" selection-start-line="59" selection-start-column="27" selection-end-line="59" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/ignite/__init__.py" />
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/ignite/contrib/__init__.py" />
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/ignite/engine/engine.py" />
     <entry file="file://$PROJECT_DIR$/code/timing.py" />
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/ignite/handlers/checkpoint.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1216">
-          <caret line="78" column="8" selection-start-line="78" selection-start-column="8" selection-end-line="78" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/ignite/handlers/checkpoint.py" />
     <entry file="file://$PROJECT_DIR$/code/metrics.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -394,46 +314,28 @@
     <entry file="file://$PROJECT_DIR$/code/main.py" />
     <entry file="file://$PROJECT_DIR$/code/generator.py" />
     <entry file="file://$PROJECT_DIR$/code/range_generator.py" />
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/pandas/core/frame.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
-          <caret line="7331" column="4" selection-start-line="7331" selection-start-column="4" selection-end-line="7331" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/matplotlib/pyplot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="2809" column="4" selection-start-line="2809" selection-start-column="4" selection-end-line="2809" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/code/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="918">
-          <caret line="56" column="33" selection-start-line="56" selection-start-column="33" selection-end-line="56" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/code/experiment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/pandas/core/frame.py" />
     <entry file="file://$PROJECT_DIR$/code/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="859">
+          <caret line="121" column="5" selection-start-line="121" selection-start-column="5" selection-end-line="121" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/Lib/site-packages/matplotlib/pyplot.py" />
+    <entry file="file://$PROJECT_DIR$/code/dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/code/minkowski.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
+        <state relative-caret-position="594">
           <caret line="33" column="35" selection-start-line="33" selection-start-column="35" selection-end-line="33" selection-end-column="35" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
@@ -441,50 +343,76 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/code/dataset.py">
+    <entry file="file://$PROJECT_DIR$/experiments/2019-03-27_14_43/plot.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/2019-02-25_12_13/logs.tsv">
+      <provider selected="true" editor-type-id="csv-text-editor">
+        <state relative-caret-position="-2118" />
+      </provider>
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/experiment-dima/logs.tsv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/code/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3942">
+          <caret line="224" column="13" selection-start-line="224" selection-start-column="13" selection-end-line="224" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/code/analyze.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/code/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/code/generate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="25" column="10" lean-forward="true" selection-start-line="25" selection-start-column="10" selection-end-line="25" selection-end-column="10" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/code/train.py">
+    <entry file="file://$PROJECT_DIR$/code/generate.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4140">
-          <caret line="12" column="47" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
+        <state relative-caret-position="396">
+          <caret line="27" selection-start-line="7" selection-end-line="27" />
           <folding>
-            <marker date="1553117434526" expanded="true" signature="7835:8127" ph="..." />
-            <marker date="1553117434526" expanded="true" signature="8135:8406" ph="..." />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/code/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="859">
-          <caret line="121" column="5" selection-start-line="121" selection-start-column="5" selection-end-line="121" selection-end-column="5" />
+        <state relative-caret-position="630">
+          <caret line="44" column="4" selection-start-line="44" selection-start-column="4" selection-end-line="44" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/code/experiment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="17" column="20" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/code/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="29" lean-forward="true" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
         </state>
       </provider>
     </entry>
