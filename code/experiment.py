@@ -12,12 +12,12 @@ if __name__ == '__main__':
         logger=logger,
         experiment_dir=experiment_dir,
         data_dir=Path('data/berea_ti'),
-        batch_size=128,
+        batch_size=64,
         z_dim=512,
         g_filters=64,
-        d_filters=64,
+        d_filters=32,
         learning_rate=2e-4,
         beta_1=0.5,
-        epochs=150,
+        epochs=100,
         scheduler=True
     )

@@ -1,6 +1,5 @@
 import argparse
 from pathlib import Path
-
 import torch
 
 from utils import fix_random_seed, save_hdf5

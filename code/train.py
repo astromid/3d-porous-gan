@@ -6,6 +6,7 @@ from typing import Dict, Optional
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 import torch
@@ -96,7 +97,7 @@ def train_gan(
     optimizer_g = optim.Adam(net_g.parameters(), lr=learning_rate, betas=(beta_1, 0.999))
     optimizer_d = optim.Adam(net_d.parameters(), lr=learning_rate, betas=(beta_1, 0.999))
 
-    patience = int(4500 / len(loader))
+    patience = int(3000 / len(loader))
     scheduler_g = optim.lr_scheduler.ReduceLROnPlateau(optimizer_g, min_lr=1e-6, verbose=True, patience=patience)
     scheduler_d = optim.lr_scheduler.ReduceLROnPlateau(optimizer_d, min_lr=1e-6, verbose=True, patience=patience)
 
@@ -134,7 +135,7 @@ def train_gan(
         # 2. Update G network: maximize log(D(G(z)))
         loss_g = None
         p_gen = None
-        for _ in range(2):
+        for _ in range(1):
             fake_batch = net_g(torch.randn(batch_size, z_dim, 1, 1, 1, device=device))
             optimizer_g.zero_grad()
             d_out_fake = net_d(fake_batch)
@@ -148,6 +149,7 @@ def train_gan(
         cube = net_g(fixed_noise).detach().squeeze().cpu()
         cube = cube.mul(0.5).add(0.5).numpy()
         cube = postprocess_cube(cube)
+        cube = np.pad(cube, ((1, 1), (1, 1), (1, 1)), mode='constant', constant_values=0)
         v, s, b, xi = compute_minkowski(cube)
         return {
             'loss_d': loss_d.item(),
@@ -166,7 +168,7 @@ def train_gan(
         dirname=str(experiment_dir),
         filename_prefix=CKPT_PREFIX,
         save_interval=5,
-        n_saved=10,
+        n_saved=50,
         require_empty=False
     )
 

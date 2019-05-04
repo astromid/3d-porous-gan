@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 import torch
 from tqdm import tqdm
-
+from models import Generator
 from minkowski import compute_minkowski
-from utils import fix_random_seed, postprocess_cube
+from utils import fix_random_seed, postprocess_cube, two_point_correlation
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -19,10 +19,22 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint_name', type=str, help='Name of the net checkpoint')
 
     args = parser.parse_args()
-    seeds = np.random.choice(range(args.num ** 3), size=args.num)
+    seeds = np.random.choice(range(args.num * 3), size=args.num)
     checkpoint_path = Path('experiments') / args.experiment_name / args.checkpoint_name
+    covariance_dir = Path('experiments') / args.experiment_name / 'covariance_stats'
+    covariance_dir.mkdir(exist_ok=True)
     device = torch.device("cuda") if torch.cuda.is_available() and not args.cpu else torch.device("cpu")
-    net_g = torch.load(checkpoint_path).to(device)
+
+    # net_g = torch.load(checkpoint_path).to(device)
+    net_g = Generator(
+        img_size=64,
+        z_dim=args.z_dim,
+        num_channels=1,
+        num_filters=64,
+        num_extra_layers=0
+    ).to(device)
+    net_g.load_state_dict(torch.load(checkpoint_path))
+
     v_list = []
     s_list = []
     b_list = []
@@ -33,14 +45,29 @@ if __name__ == '__main__':
         cube = net_g(noise).squeeze().detach().cpu()
         cube = cube.mul(0.5).add(0.5).numpy()
         cube = postprocess_cube(cube)
+        cube = np.pad(cube, ((1, 1), (1, 1), (1, 1)), mode='constant', constant_values=0)
         v, s, b, xi = compute_minkowski(cube)
         v_list.append(v)
         s_list.append(s)
         b_list.append(b)
         xi_list.append(xi)
+
+        two_point_covariance = {}
+        grain_value = cube.max()
+        for i, direct in enumerate(["x", "y", "z"]):
+            two_point_direct = two_point_correlation(cube, i, var=grain_value)
+            two_point_covariance[direct] = two_point_direct
+        # phase averaging
+        direct_covariances = {}
+        for direct in ["x", "y", "z"]:
+            direct_covariances[direct] = np.mean(np.mean(two_point_covariance[direct], axis=0), axis=0)
+        # covariance storage
+        covariance_df = pd.DataFrame(direct_covariances)
+        covariance_df.to_csv(covariance_dir / ("seed_" + str(seed) + ".csv"), index=False)
+
     df = pd.DataFrame()
     df['V'] = pd.Series(v_list)
     df['S'] = pd.Series(s_list)
     df['B'] = pd.Series(b_list)
     df['Xi'] = pd.Series(xi_list)
-    df.to_csv(Path('experiments') / args.experiment_name / 'range_analyze.csv', header=True, index=False)
+    df.to_csv(Path('experiments') / args.experiment_name / 'seeds_analyze.csv', index=False)
