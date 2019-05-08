@@ -21,9 +21,10 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     seeds = np.random.choice(range(14300631), size=args.num)
+    size = int(0.8 * (48 + args.img_factor * 16))
     checkpoint_path = Path('experiments') / args.experiment_name / args.checkpoint_name
-    covariance_dir = Path('experiments') / args.experiment_name / 'covariance_stats'
-    covariance_dir.mkdir(exist_ok=True)
+    covariance_dir = Path('experiments') / args.experiment_name / f'covariance_stats_{size}'
+    covariance_dir.mkdir()
     device = torch.device("cuda") if torch.cuda.is_available() and not args.cpu else torch.device("cpu")
 
     # net_g = torch.load(checkpoint_path).to(device)
@@ -36,11 +37,13 @@ if __name__ == '__main__':
     ).to(device)
     net_g.load_state_dict(torch.load(checkpoint_path))
 
-    v_list = []
-    s_list = []
-    b_list = []
-    xi_list = []
-    for seed in tqdm(seeds, desc="Generate iteration"):
+    data = {
+        'V': [],
+        'S': [],
+        'B': [],
+        'Xi': []
+    }
+    for seed in tqdm(seeds, desc=f"Generate {size}^3, iteration"):
         _ = fix_random_seed(seed)
         noise = torch.randn(1, args.z_dim, args.img_factor, args.img_factor, args.img_factor, device=device)
         cube = net_g(noise).squeeze().detach().cpu()
@@ -48,10 +51,10 @@ if __name__ == '__main__':
         cube = postprocess_cube(cube)
         cube = np.pad(cube, ((1, 1), (1, 1), (1, 1)), mode='constant', constant_values=0)
         v, s, b, xi = compute_minkowski(cube)
-        v_list.append(v)
-        s_list.append(s)
-        b_list.append(b)
-        xi_list.append(xi)
+        data['V'].append(v)
+        data['S'].append(s)
+        data['B'].append(b)
+        data['Xi'].append(xi)
 
         two_point_covariance = {}
         grain_value = cube.max()
@@ -66,9 +69,5 @@ if __name__ == '__main__':
         covariance_df = pd.DataFrame(direct_covariances)
         covariance_df.to_csv(covariance_dir / ("seed_" + str(seed) + ".csv"), index=False)
 
-    df = pd.DataFrame()
-    df['V'] = pd.Series(v_list)
-    df['S'] = pd.Series(s_list)
-    df['B'] = pd.Series(b_list)
-    df['Xi'] = pd.Series(xi_list)
-    df.to_csv(Path('experiments') / args.experiment_name / 'seeds_analyze.csv', index=False)
+    df = pd.DataFrame(data)
+    df.to_csv(Path('experiments') / args.experiment_name / f'seeds_analyze_{size}.csv', index=False)

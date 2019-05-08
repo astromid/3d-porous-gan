@@ -19,10 +19,10 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint_name', type=str, help='Name of the net checkpoint')
 
     args = parser.parse_args()
+    size = int(0.8 * (48 + args.img_factor * 16))
     seeds = np.random.choice(range(14300631), size=args.num)
     device = torch.device("cuda") if torch.cuda.is_available() and not args.cpu else torch.device("cpu")
     checkpoint_path = Path('experiments') / args.experiment_name / args.checkpoint_name
-    # net_g = torch.load(checkpoint_path).to(device)
     net_g = Generator(
         img_size=64,
         z_dim=args.z_dim,
@@ -32,10 +32,10 @@ if __name__ == '__main__':
     ).to(device)
     net_g.load_state_dict(torch.load(checkpoint_path))
 
-    results_dir = Path('experiments') / args.experiment_name / 'generated'
+    results_dir = Path('experiments') / args.experiment_name / f'generated_{size}'
     results_dir.mkdir(exist_ok=True)
 
-    for seed in tqdm(seeds, desc="Generate iteration"):
+    for seed in tqdm(seeds, desc=f"Generate {size}^3, iteration"):
         _ = fix_random_seed(seed)
         noise = torch.randn(1, args.z_dim, args.img_factor, args.img_factor, args.img_factor, device=device)
         cube = net_g(noise).squeeze().detach().cpu()
