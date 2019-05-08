@@ -5,8 +5,9 @@ import numpy as np
 import pandas as pd
 import torch
 from tqdm import tqdm
-from models import Generator
+
 from minkowski import compute_minkowski
+from models import Generator
 from utils import fix_random_seed, postprocess_cube, two_point_correlation
 
 if __name__ == '__main__':
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint_name', type=str, help='Name of the net checkpoint')
 
     args = parser.parse_args()
-    seeds = np.random.choice(range(args.num * 3), size=args.num)
+    seeds = np.random.choice(range(14300631), size=args.num)
     checkpoint_path = Path('experiments') / args.experiment_name / args.checkpoint_name
     covariance_dir = Path('experiments') / args.experiment_name / 'covariance_stats'
     covariance_dir.mkdir(exist_ok=True)

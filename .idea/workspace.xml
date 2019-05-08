@@ -2,28 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3078afa4-3238-4bc3-9087-0da96dd82b1f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/3d-porous-gan.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/3d-porous-gan.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/analyze.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/analyze_generated.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/cube_stats.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/experiment.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/generate.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/generate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/minkowski.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/minkowski.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/text/0-title.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/0-title.tex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text/1-introduction.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/1-introduction.tex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text/2-ann.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/2-ann.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/3-optimizer.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/3-optimizer.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/4-verification.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/4-verification.tex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text/5-results.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/5-results.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/6-conclusions.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/6-conclusions.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/7-conclusion.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/7-conclusion.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/text/8-supplement.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/8-supplement.tex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text/diploma.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/text/diploma.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text/diploma.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/diploma.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text/presentation.tex" beforeDir="false" afterPath="$PROJECT_DIR$/text/presentation.tex" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,26 +22,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/code/analyze.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-162">
-              <caret line="21" column="45" selection-start-line="21" selection-start-column="45" selection-end-line="21" selection-end-column="45" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/code/generate.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="23" column="36" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="36" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="180">
+              <caret line="10" column="43" selection-start-line="10" selection-start-column="43" selection-end-line="10" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -60,7 +34,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/code/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2610">
+            <state relative-caret-position="836">
               <caret line="170" column="18" selection-start-line="170" selection-start-column="18" selection-end-line="170" selection-end-column="18" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
@@ -72,7 +46,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/code/experiment.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
+            <state relative-caret-position="414">
               <caret line="23" selection-start-line="23" selection-end-line="23" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
@@ -93,13 +67,25 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/code/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1620">
-              <caret line="90" column="32" selection-start-line="90" selection-start-column="32" selection-end-line="90" selection-end-column="32" />
+            <state relative-caret-position="594">
+              <caret line="48" column="18" selection-start-line="48" selection-start-column="18" selection-end-line="48" selection-end-column="18" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/code/generate_tiffs.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="373">
+              <caret line="21" column="43" selection-start-line="21" selection-start-column="43" selection-end-line="21" selection-end-column="43" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -137,13 +123,15 @@
         <option value="$PROJECT_DIR$/code/__init__.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/code/dataset.py" />
-        <option value="$PROJECT_DIR$/code/generate.py" />
-        <option value="$PROJECT_DIR$/code/utils.py" />
         <option value="$PROJECT_DIR$/code/models.py" />
         <option value="$PROJECT_DIR$/code/minkowski.py" />
         <option value="$PROJECT_DIR$/code/train.py" />
         <option value="$PROJECT_DIR$/code/experiment.py" />
+        <option value="$PROJECT_DIR$/code/generate.py" />
+        <option value="$PROJECT_DIR$/code/hdf52tiff.py" />
+        <option value="$PROJECT_DIR$/code/generate_tiffs.py" />
         <option value="$PROJECT_DIR$/code/analyze.py" />
+        <option value="$PROJECT_DIR$/code/utils.py" />
       </list>
     </option>
   </component>
@@ -172,6 +160,22 @@
               <item name="3d-porous-gan" type="b2602c69:ProjectViewProjectNode" />
               <item name="3d-porous-gan" type="462c0819:PsiDirectoryNode" />
               <item name="code" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="3d-porous-gan" type="b2602c69:ProjectViewProjectNode" />
+              <item name="3d-porous-gan" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="3d-porous-gan" type="b2602c69:ProjectViewProjectNode" />
+              <item name="3d-porous-gan" type="462c0819:PsiDirectoryNode" />
+              <item name="experiments" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="3d-porous-gan" type="b2602c69:ProjectViewProjectNode" />
+              <item name="3d-porous-gan" type="462c0819:PsiDirectoryNode" />
+              <item name="experiments" type="462c0819:PsiDirectoryNode" />
+              <item name="original-berea" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -267,17 +271,21 @@
       <workItem from="1556624201756" duration="596000" />
       <workItem from="1556790072667" duration="2780000" />
       <workItem from="1556832623789" duration="1934000" />
+      <workItem from="1557132519993" duration="4420000" />
+      <workItem from="1557156261848" duration="694000" />
+      <workItem from="1557300499867" duration="168000" />
+      <workItem from="1557306393733" duration="649000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="140012000" />
+    <option name="totallyTimeSpent" value="145943000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23187633" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24253732" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -293,7 +301,7 @@
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.32936078" />
       <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
-      <window_info anchor="bottom" id="File Transfer" order="13" weight="0.32936078" />
+      <window_info anchor="bottom" id="File Transfer" order="13" visible="true" weight="0.32936078" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -396,23 +404,29 @@
     <entry file="file://$PROJECT_DIR$/code/dataset.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/code/train.py">
+    <entry file="file://$PROJECT_DIR$/code/generate.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2610">
-          <caret line="170" column="18" selection-start-line="170" selection-start-column="18" selection-end-line="170" selection-end-column="18" />
+        <state relative-caret-position="126">
+          <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/code/experiment.py">
+    <entry file="file://$PROJECT_DIR$/data/create_training_images.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        <state>
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/code/analyze.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="43" selection-start-line="10" selection-start-column="43" selection-end-line="10" selection-end-column="43" />
         </state>
       </provider>
     </entry>
@@ -436,32 +450,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/code/utils.py">
+    <entry file="file://$PROJECT_DIR$/code/experiment.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1620">
-          <caret line="90" column="32" selection-start-line="90" selection-start-column="32" selection-end-line="90" selection-end-column="32" />
+        <state relative-caret-position="414">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/code/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="836">
+          <caret line="170" column="18" selection-start-line="170" selection-start-column="18" selection-end-line="170" selection-end-column="18" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/code/generate.py">
+    <entry file="file://$PROJECT_DIR$/code/generate_tiffs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="23" column="36" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="36" />
+        <state relative-caret-position="373">
+          <caret line="21" column="43" selection-start-line="21" selection-start-column="43" selection-end-line="21" selection-end-column="43" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/code/analyze.py">
+    <entry file="file://$PROJECT_DIR$/code/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-162">
-          <caret line="21" column="45" selection-start-line="21" selection-start-column="45" selection-end-line="21" selection-end-column="45" />
+        <state relative-caret-position="594">
+          <caret line="48" column="18" selection-start-line="48" selection-start-column="18" selection-end-line="48" selection-end-column="18" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
