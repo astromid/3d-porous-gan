@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     seeds = np.random.choice(range(14300631), size=args.num)
-    size = int(0.8 * (48 + args.img_factor * 16))
+    size = int(0.9 * (48 + args.img_factor * 16))
     checkpoint_path = Path('experiments') / args.experiment_name / args.checkpoint_name
     covariance_dir = Path('experiments') / args.experiment_name / f'covariance_stats_{size}'
     covariance_dir.mkdir()

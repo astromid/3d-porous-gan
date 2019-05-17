@@ -19,7 +19,7 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint_name', type=str, help='Name of the net checkpoint')
 
     args = parser.parse_args()
-    size = int(0.8 * (48 + args.img_factor * 16))
+    size = int(0.9 * (48 + args.img_factor * 16))
     seeds = np.random.choice(range(14300631), size=args.num)
     device = torch.device("cuda") if torch.cuda.is_available() and not args.cpu else torch.device("cpu")
     checkpoint_path = Path('experiments') / args.experiment_name / args.checkpoint_name
