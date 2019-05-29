@@ -1,4 +1,4 @@
-\documentclass[10pt, handout, aspectratio=169]{beamer}
+\documentclass[12pt]{beamer}
 
 \usepackage{amssymb,amsmath,mathtext}
 \usepackage{indentfirst,amsfonts}
@@ -18,144 +18,333 @@
 \usepackage[utf8]{inputenc}
 
 \setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{footline}[frame number]
 
-\usetheme{pittsburgh}
+\usetheme{boxes}
 \usecolortheme{seahorse}
 
 \setbeamerfont{frametitle}{series=\bfseries}
 \setbeamerfont{block title}{series=\bfseries}
-\setbeamerfont{page number in head/foot}{size=\large}
 
 \begin{document}
-	\title{Нейросетевая реконструкция пористых тел с сохранением топологических и статистических свойств образца}
-	\author{Будакян Я. С. \and \break \break \break Научный руководитель: к.т.н., доцент Грачев Е. А.}
+	\title{Реконструкция трёхмерных пористых сред с использованием искусственных нейронных сетей}
+	\author{Будакян Я. С. \and \break \break \break Научный руководитель: к.т.н., доцент Грачёв Е. А.}
+	\date{Москва, 2019 г.} 
+
 	\maketitle
+
+	\begin{frame}{Введение}
+		\begin{itemize}
+			\item При моделировании геофизических процессов существует проблема недостаточности знаний о среде, в которой эти процессы протекают. Точные данные доступны из небольшой области (керна - небольшого куска породы, забранного из скважины), а данные компьютерной томографии - из ещё меньшей области (кусочков, вырезанных из керна);
+			
+			\item Получение дополнительных данных (например, новых кернов, компьютерной томографии) связано с большими затратами. При этом, многие эксперименты по установлению различных характеристик среды в реальности можно провести только один раз для одного керна, поскольку они необратимым образом влияют на него.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Задача реконструкции}
+		Разработка алгоритма реконструкции синтетических образцов пористой среды на основе данных с реального образца. Новые образцы должны сохранять некоторые топологические и статистические свойства реального образца:
+		\begin{itemize}
+			\item $ \displaystyle V = \frac{1}{V_{all}} \int_{V_{pore}} dV = \frac{V_{pore}}{V_{all}}$ - пористость
+			\item $ \displaystyle S = \frac{1}{V_{all}} \int_{\delta V_{pore}} dS $ - удельная площадь поверхности
+		\end{itemize}
+		
+	\end{frame}
+
+	\begin{frame}{Задача реконструкции}
+		\begin{itemize}
+			\item $ \displaystyle B = \frac{1}{V_{all}} \int_{\delta V_{pore}} \left ( \frac{1}{R_1} + \frac{1}{R_2} \right ) dS$ - удельная кривизна поверхности
+			\item $\displaystyle \xi = \frac{1}{V_{all}} \int_{\delta V_{pore}} \frac{1}{R_1 R_2} dS $ - число Эйлера
+			\item $ S_2(r) = \boldsymbol{P}(\boldsymbol{x} \in P, \boldsymbol{x}+\boldsymbol{r} \in P), \quad \boldsymbol{x}, \boldsymbol{r} \in \mathbb{R}^d $ - двухточечная функция вероятности,
+		\end{itemize}
+		где $\delta V_{pore}$ - граница двух фаз (среды и пор), $\boldsymbol{P}$ - это вероятность того, что две точки, отстоящие друг от друга на вектор $\boldsymbol{r}$, принадлежат одной фазе (обе являются порами).
+	\end{frame}
 	
-	\begin{frame}{Проблема исследований кернов}
-		\begin{itemize}
-			\item При моделировании геофизических процессов существует проблема недостаточности знаний о среде, в которой эти процессы протекают. Точные данные доступны из небольшой области (керна), а данные компьютерной томографии - из ещё меньшей области (кусочков, вырезанных из керна);
-			\item Получение дополнительных данных (например, новых кернов, компьютерной томографии) связано с большими затратами. При этом, многие эксперименты в реальности с керном можно провести только один раз, поскольку они необратимым образом влияют на керн;
-		\end{itemize}
-	С решением задачи правдоподобного реконструирования пористых сред, появляется возможность:
-		\begin{itemize}
-			\item Провести апскейлинг (реконструировать среду в большем размере, чем оригинальный образец);
-			\item Проводить статистические эксперименты (проводить моделирование процессов не только на оригинальном образце, но и на его реконструкциях, получая таким образом не значение в одной точке, а распределение);
-		\end{itemize}
-	\end{frame}
-
-	\begin{frame}{Задачи}
-		\begin{itemize}
-			\item Разработать алгоритм реконструкции трехмерных пористых сред на основе образца, с сохранением следующих его топологических и статистических характеристик:
-			\begin{itemize}
-				\item 4 первых функционала Минковского:
-				\begin{itemize}
-					\item Объем
-					\item Площадь поверхности
-					\item Средняя кривизна
-					\item Характеристика Эйлера-Пуанкаре
-				\end{itemize}
-				\item Двухточечная корреляционная функция
-			\end{itemize}
-			\item Верифицировать алгоритм на большом количестве реконструированных образцов
-		\end{itemize}
-	\end{frame}
-
-	\begin{frame}{Функционалы Минковского}
-		Функционалы Минковского для трехмерных тел вводятся следующим образом:
-		\begin{itemize}
-			\item $ \displaystyle V = M_0 = \int_{\delta X} dV $
-			\item $ \displaystyle S = M_1 = \frac{1}{3} \int_{\delta X} dS $
-			\item $ \displaystyle B = M_2 = \frac{1}{6} \int_{\delta X} \left ( \frac{1}{R_1} + \frac{1}{R_2} \right ) dS$
-			\item $\displaystyle \xi = M_3 = \frac{1}{3} \int_{\delta X} \frac{1}{R_1 R_2} dS $
-		\end{itemize}
-	\end{frame}
-
-	\begin{frame}{Метод решения}
-		Для реконструкции применяется генеративная состязательная нейронная сеть
-		\begin{figure}
-			\centering{\includegraphics[width=0.7\linewidth]{GAN_overview}}
+	\begin{frame}{Модельные ограничения}
+		Рассматриваются данные компьютерной томографии керна, состоящего из двух фаз - среды и пор, т. е. томограмма это бинарно-сегментированное трёхмерное изображение.
+		\begin{figure}[h]
+			\centering{\includegraphics[width=0.5\linewidth]{5-results/berea/original}}
+			\vfill
+			Образец томограммы керна
 		\end{figure}
-		Ее обучение сводится к минимизации функционала:
-		\[ \underset{\theta}{\min} \underset{\zeta}{\max} \ \mathbb{E}_{x \sim p_{data}}\log D_\zeta(x) + \mathbb{E}_{z \sim p_{z}} \log (1 - D_\zeta(G_\theta(z))) \]
 	\end{frame}
-
-	\begin{frame}{Новизна}
+	
+	\begin{frame}{Математическая формализация}
+		Задачу реконструкции можно формализовать с помощью вероятностной постановки задачи обучения:
 		\begin{itemize}
-			\item Конкретные архитектуры сетей генератора и дискриминатора взяты неизмененными из других работ похожей тематики;
-			\item Новизна заключается в модифицированной адаптируемой процедуре обучения нейронной сети с автоматическим отслеживанием значений функционалов Минковского и изменением гиперпараметров в процессе обучения;
+			\item Рассматривается многомерное пространство $X$, содержащее множество всех трёхмерных изображений $x$: $X = \{x\}$
+			\item Есть обучающая выборка, состоящая из реальных томограмм $D = \{x_i\}, D \subset X$
+			\item Считается, что  $D$ задаёт в $X$ вероятностное распределение $P_X : X \longrightarrow [0,1]$
 		\end{itemize}
 	\end{frame}
-
-	\begin{frame}{Текущие результаты}
-		На данный момент:
+	
+	\begin{frame}{Математическая формализация}
+		Задача реконструкции трёхмерной пористой среды сводится к синтезу случайного изображения $x'$ из распределения, близкого к задаваемому обучающей выборкой:
+		$$ P_{X'} \approx P_X, \quad x' \sim X'$$
+		
+		Для моделирования вероятностного распределения $P_X$ предлагается использовать генеративную состязательную нейронную сеть.
+	\end{frame}
+	
+	\begin{frame}{GAN}
+		Генеративные состязательные сети (GAN - Generative Adversarial Networks) были придуманы в 2014 году и достигли больших успехов в задачах моделирования сложных распределений.
 		\begin{itemize}
-			\item Разработка алгоритмической части завершена (реализован программный комплекс, позволяющий обучать нужны сети и использовать их для реконструкции образцов);
-			\item Проведен ряд вычислительных экспериментов по обучению сетей на томографии песчаника;
-			\item Анализ в процессе (анализ функционалов Минковского готов, двухточечная корреляционная функция пока нет);
-			\item Текст готов примерно на треть;
-		\end{itemize}
-		Ещё нужно сделать:
-		\begin{itemize}
-			\item Провести дополнительные вычислительные эксперименты;
-			\item Провести более широкомасштабный анализ функционалов Минковского реконструированных образцов;
-			\item Провести статистический анализ (построить и сравнить двухточечные корреляционные функции);
+			\item $ P_{X'} \approx P_X \Leftrightarrow \rho(P_{X'}, P_X) \longrightarrow \underset{P_{X'}}{\min} $
+			\item $ X' = g_{\theta}(\cdot) \Rightarrow \rho(g_{\theta}(\cdot), P_X) \longrightarrow \underset{\theta}{\min}$
+			\item В качестве $\rho$ можно использовать функцию потерь обученного классификатора
 		\end{itemize}
 	\end{frame}
-
-	\begin{frame}{Текущие результаты}
+	
+	\begin{frame}{GAN}
+		Используются две нейросети:
+		\begin{itemize}
+			\item $d_{\zeta}(x)$ - классификатор, \textbf{дискриминатор}
+			\item $g_{\theta}(x)$ - сеть, трансформирующая входящий шум в элементы множества $X'$, \textbf{генератор}
+		\end{itemize}
+		Суть использования двух сетей состоит в том, что они обучаются совместно, конкурируя друг с другом.
+		$$ \theta^* = \underset{\theta}{\arg\max} \left[ \underset{\zeta}{\min} L(\zeta, \theta) \right] $$
+	\end{frame}
+	
+	\begin{frame}{GAN}
+		Процесс обучения сети GAN принимает следующий вид:
 		\begin{columns}
-			\column{0.25\linewidth}
+			\column{0.5\linewidth}
+			\begin{itemize}
+				\item Обучается дискриминатор при фиксированном генераторе
+				\item Обучается генератор при фиксированном дискриминаторе
+				\item Повторяется до сходимости параметров обеих моделей
+			\end{itemize}
+			\column{0.5\linewidth}
 			\begin{figure}
-				\centering{\includegraphics[width=\linewidth]{original}}
-				\caption{Образец}
-			\end{figure}
-			\column{0.25\linewidth}
-			\begin{figure}
-				\centering{\includegraphics[width=\linewidth]{generated_1}}
-				\caption{1}
-			\end{figure}
-			\column{0.25\linewidth}
-			\begin{figure}
-				\centering{\includegraphics[width=\linewidth]{generated_2}}
-				\caption{2}
-			\end{figure}
-			\column{0.25\linewidth}
-			\begin{figure}
-				\centering{\includegraphics[width=\linewidth]{generated_3}}
-				\caption{3}
-			\end{figure}
-		\end{columns}
-		\vfill
-		\centering{Примеры реконструкции одной из обученных сетей}
-	\end{frame}
-
-	\begin{frame}{Текущие результаты}
-		Анализ значений функционалов Минковского (V, S) для реконструированных образцов
-		\begin{columns}
-			\column{0.45\linewidth}
-			\begin{figure}
-				\centering{\includegraphics[width=\linewidth]{V_dispersion}}
-			\end{figure}
-			\column{0.45\linewidth}
-			\begin{figure}
-				\centering{\includegraphics[width=\linewidth]{S_dispersion}}
+				\centering{\includegraphics[width=\linewidth]{3-ann/gan-training}}
 			\end{figure}
 		\end{columns}
 	\end{frame}
 
-	\begin{frame}{Текущие результаты}
-		Анализ значений функционалов Минковского (B, $\xi$) для реконструированных образцов
-		\begin{columns}
-			\column{0.45\linewidth}
-			\begin{figure}
-				\centering{\includegraphics[width=\linewidth]{B_dispersion}}
-			\end{figure}
-			\column{0.45\linewidth}
-			\begin{figure}
-				\centering{\includegraphics[width=\linewidth]{Xi_dispersion}}
-			\end{figure}
-		\end{columns}
+	\begin{frame}{Модификация}
+		Использование GAN для реконструкции пористых сред уже исследовалось \footfullcite{Mosser2017}. Однако, главный недостаток предыдущих экспериментов состоит в ручном контроле процесса обучения сетей. 
+		
+		Целью данной работы было:
+		\begin{itemize}
+			\item Повторить ранее описанный работоспособный подход
+			\item Провести модификацию процедуры обучения сетей для устранения необходимости ручного контроля
+			\item Провести сравнительный анализ результатов с точки зрения сохранения топологических и статистических характеристик реконструированных образцов
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Обучающая выборка}
+		Обучающая выборка для сети была сформирована путём разрезания компьютерной томограммы песчаника размером $400^3$ вокселей на кубики размером $64^3$ вокселей с перекрытием в 16 вокселей.
+		\begin{table}
+			\centering
+			\begin{tabular}{p{3cm} p{3cm} p{3cm}}
+				\includegraphics[width=1.0\linewidth]{5-results/berea/berea_1}
+				&
+				\includegraphics[width=1.0\linewidth]{5-results/berea/berea_3}
+				&
+				\includegraphics[width=1.0\linewidth]{5-results/berea/berea_5}
+			\end{tabular}
+			\caption{Примеры из сформированной обучающей выборки}
+		\end{table}
+	\end{frame}
+
+	\begin{frame}{Результаты}
+		Были проведены вычислительные эксперименты по обучению сетей с модификацией для устранения ручного контроля. Анализ реконструкций был произведён на размерах $64^3$, $216^3$ и $360^3$. Для каждого из размеров было получено >500 реконструкций, что позволило построить распределения их характеристик.
+	\end{frame}
+	
+	\begin{frame}{Реконструкции $64^3$}
+		\begin{table}
+			\centering
+			\begin{tabular}{p{3cm} p{3cm} p{3cm}}
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/generated/1}
+				&
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/generated/3}
+				&
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/generated/5}
+				\\
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/generated/7}
+				&
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/generated/9}
+				&
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/generated/11}
+			\end{tabular}
+			\caption{Примеры реконструкций размера $64^3$}
+		\end{table}
+	\end{frame}
+	
+	\begin{frame}{Реконструкции $64^3$}
+		\begin{figure}
+			\begin{minipage}{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/V_exp}
+			\end{minipage}
+			\hfill
+			\begin{minipage}[h]{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/S_exp}
+			\end{minipage}
+			\vfill
+			\begin{minipage}[h]{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/B_exp}
+			\end{minipage}
+			\hfill
+			\begin{minipage}[h]{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_64/Xi_exp}
+			\end{minipage}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}{Реконструкции $216^3$}
+		\begin{table}
+			\centering
+			\begin{tabular}{p{3cm} p{3cm} p{3cm}}
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/generated/1}
+				&
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/generated/3}
+				&
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/generated/5}
+				\\
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/generated/7}
+				&
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/generated/9}
+				&
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/generated/11}
+			\end{tabular}
+			\caption{Примеры реконструкций размера $216^3$}
+		\end{table}
+	\end{frame}
+
+	\begin{frame}{Реконструкции $216^3$}
+		\begin{figure}
+			\begin{minipage}{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/V_exp}
+			\end{minipage}
+			\hfill
+			\begin{minipage}[h]{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/S_exp}
+			\end{minipage}
+			\vfill
+			\begin{minipage}[h]{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/B_exp}
+			\end{minipage}
+			\hfill
+			\begin{minipage}[h]{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/Xi_exp}
+			\end{minipage}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}{Реконструкции $216^3$, ручной контроль}
+		\begin{figure}
+			\begin{minipage}{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/V_paper}
+			\end{minipage}
+			\hfill
+			\begin{minipage}[h]{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/S_paper}
+			\end{minipage}
+			\vfill
+			\begin{minipage}[h]{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/B_paper}
+			\end{minipage}
+			\hfill
+			\begin{minipage}[h]{0.45\linewidth}
+				\centering
+				\includegraphics[width=1\linewidth]{5-results/analysis_216/Xi_paper}
+			\end{minipage}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}{Заключение}
+		\begin{itemize}
+			\item Воспроизведён подход по реконструкции пористой среды с помощью GAN
+			\item Реализована модификация процесса обучения сети для устранения ручного контроля
+			\item Получены результаты реконструкций для разных размеров
+			\item Проведён сравнительный анализ характеристик реконструкций
+		\end{itemize}
+		Полученные результаты показывают, что сеть без ручного контроля обучения успешно обучается и способна реконструировать пористую среду, однако качество реконструкций на размерах больших, чем размер обучающих примеров, получилось хуже, чем для сети с ручным контролем обучения.
+	\end{frame}
+	
+	\begin{frame}
+		\centering\huge{Спасибо за внимание!}
+	\end{frame}
+	
+	\begin{frame}{Задача минимизации}
+		Обучение нейронной сети является задачей многопараметрической минимизации функционала потерь. Для используемых в этой работе сетей данная задача ставится так:
+		 $$\mathcal{L}(\theta, \zeta) =  \mathbb{E}_{x \sim p_{data}}\log D_\zeta(x) + \mathbb{E}_{z \sim p_{z}} \log (1 - D_\zeta(G_\theta(z))) $$
+		 $$\theta^*, \zeta^* = \underset{\theta}{\arg\min} \ \underset{\zeta}{\arg\max} \ \mathcal{L}(\theta, \zeta)$$
+	\end{frame}
+	
+	\begin{frame}{Архитектуры G и D}
+		\begin{table}[h]
+			\tabcolsep=0.11cm
+			\scriptsize
+			\centering
+			\begin{tabular}{|c|c|c|c|}
+				\hline
+				Слой & Размер ядра & Размерность выхода & Кол-во параметров \\
+				\hline
+				0\_ConvTranspose3d &  [256, 512, 4, 4, 4] & [1, 256, 4, 4, 4] & 8 388 610 \\
+				1\_BatchNorm3d &  [256] & [1, 256, 4, 4, 4] & 512 \\
+				2\_ReLU & - & [1, 256, 4, 4, 4] & - \\
+				\hline
+				3\_ConvTranspose3d &  [128, 256, 4, 4, 4] & [1, 128, 8, 8, 8] & 2 097 150 \\
+				4\_BatchNorm3d &  [128] & [1, 128, 8, 8, 8] & 256 \\
+				5\_ReLU & - & [1, 128, 8, 8, 8] & - \\
+				\hline
+				6\_ConvTranspose3d &  [64, 128, 4, 4, 4] & [1, 64, 16, 16, 16] & 524 290 \\
+				7\_BatchNorm3d &  [64] & [1, 64, 16, 16, 16] & 128 \\
+				8\_ReLU & - & [1, 64, 16, 16, 16] & - \\
+				\hline
+				9\_ConvTranspose3d &  [32, 64, 4, 4, 4] & [1, 32, 32, 32, 32] & 131 070 \\
+				10\_BatchNorm3d &  [32] & [1, 32, 32, 32, 32] & 64 \\
+				11\_ReLU & - & [1, 32, 32, 32, 32] & - \\
+				\hline
+				12\_ConvTranspose3d &  [1, 32, 4, 4, 4] & [1, 1, 64, 64, 64] & 2 050 \\
+				13\_Tanh & - & [1, 1, 64, 64, 64] & - \\
+				\hline
+			\end{tabular}
+			\caption{Архитектура генератора}
+			\label{5-g-arch}
+		\end{table}
+	\end{frame}
+	
+	\begin{frame}{Архитектуры G и D}
+		\begin{table}[h]
+			\tabcolsep=0.11cm
+			\scriptsize
+			\centering
+			\begin{tabular}{|c|c|c|c|}
+				\hline
+				Слой & Размер ядра & Размерность выхода & Кол-во параметров \\
+				\hline
+				0\_Conv3d &  [1, 32, 4, 4, 4] & [1, 32, 32, 32, 32] & 2 050 \\
+				1\_LeakyReLU & - & [1, 32, 32, 32, 32] & - \\
+				\hline
+				2\_Conv3d &  [32, 64, 4, 4, 4] & [1, 64, 16, 16, 16] & 131 070 \\
+				3\_BatchNorm3d &  [64] & [1, 64, 16, 16, 16] & 128 \\
+				4\_LeakyReLU & - & [1, 64, 16, 16, 16] & - \\
+				\hline
+				5\_Conv3d &  [64, 128, 4, 4, 4] & [1, 128, 8, 8, 8] & 524 290 \\
+				6\_BatchNorm3d &  [128] & [1, 128, 8, 8, 8] & 256 \\
+				7\_LeakyReLU & - & [1, 64, 16, 16, 16] & - \\
+				\hline
+				8\_Conv3d &  [128, 256, 4, 4, 4] & [1, 256, 4, 4, 4] & 2 097 150 \\
+				9\_BatchNorm3d &  [256] & [1, 256, 4, 4, 4] & 512 \\
+				10\_LeakyReLU & - & [1, 256, 4, 4, 4] & - \\
+				\hline
+				11\_Conv3d &  [256, 1, 4, 4, 4] & [1, 1, 1, 1, 1] & 16 380 \\
+				12\_Sigmoid & - & [1, 1, 1, 1, 1] & - \\
+				\hline
+			\end{tabular}
+			\caption{Архитектура дискриминатора}
+			\label{5-d-arch}
+		\end{table}
 	\end{frame}
 
 \end{document}

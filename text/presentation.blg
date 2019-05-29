@@ -1,0 +1,15 @@
+[0] Config.pm:304> INFO - This is Biber 2.12
+[0] Config.pm:307> INFO - Logfile is 'presentation.blg'
+[51] biber-MSWIN64:315> INFO - === 
+[97] Biber.pm:371> INFO - Reading 'presentation.bcf'
+[265] Biber.pm:889> INFO - Found 1 citekeys in bib section 0
+[287] Biber.pm:4093> INFO - Processing section 0
+[309] Biber.pm:4254> INFO - Looking for bibtex format file 'biblio.bib' for section 0
+[314] bibtex.pm:1523> INFO - LaTeX decoding ...
+[353] bibtex.pm:1340> INFO - Found BibTeX data source 'biblio.bib'
+[386] UCollate.pm:68> INFO - Overriding locale 'ru-RU' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[386] UCollate.pm:68> INFO - Overriding locale 'ru-RU' defaults 'variable = shifted' with 'variable = non-ignorable'
+[386] Biber.pm:3921> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'ru-RU'
+[386] Biber.pm:3927> INFO - No sort tailoring available for locale 'ru-RU'
+[395] bbl.pm:636> INFO - Writing 'presentation.bbl' with encoding 'UTF-8'
+[396] bbl.pm:739> INFO - Output to presentation.bbl

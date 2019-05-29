@@ -1,0 +1,160 @@
+\documentclass[10pt, handout, aspectratio=169]{beamer}
+
+\usepackage{amssymb,amsmath,mathtext}
+\usepackage{indentfirst,amsfonts}
+\usepackage{makecell,multirow,longtable}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{verbatim}
+\usepackage{booktabs}
+\usepackage{biblatex}
+\addbibresource{biblio.bib}
+
+
+\graphicspath{{graphs/}}
+
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\usetheme{pittsburgh}
+\usecolortheme{seahorse}
+
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{block title}{series=\bfseries}
+\setbeamerfont{page number in head/foot}{size=\large}
+
+\begin{document}
+	\title{Нейросетевая реконструкция пористых тел с сохранением топологических и статистических свойств образца}
+	\author{Будакян Я. С. \and \break \break \break Научный руководитель: к.т.н., доцент Грачев Е. А.}
+	\maketitle
+	
+	\begin{frame}{Проблема исследований кернов}
+		\begin{itemize}
+			
+		\end{itemize}
+	С решением задачи правдоподобного реконструирования пористых сред, появляется возможность:
+		\begin{itemize}
+			\item Провести апскейлинг (реконструировать среду в большем размере, чем оригинальный образец);
+			\item Проводить статистические эксперименты (проводить моделирование процессов не только на оригинальном образце, но и на его реконструкциях, получая таким образом не значение в одной точке, а распределение);
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Задачи}
+		\begin{itemize}
+			\item Разработать алгоритм реконструкции трехмерных пористых сред на основе образца, с сохранением следующих его топологических и статистических характеристик:
+			\begin{itemize}
+				\item 4 первых функционала Минковского:
+				\begin{itemize}
+					\item Объем
+					\item Площадь поверхности
+					\item Средняя кривизна
+					\item Характеристика Эйлера-Пуанкаре
+				\end{itemize}
+				\item Двухточечная корреляционная функция
+			\end{itemize}
+			\item Верифицировать алгоритм на большом количестве реконструированных образцов
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Функционалы Минковского}
+		Функционалы Минковского для трехмерных тел вводятся следующим образом:
+		\begin{itemize}
+			\item $ \displaystyle V = M_0 = \int_{\delta X} dV $
+			\item $ \displaystyle S = M_1 = \frac{1}{3} \int_{\delta X} dS $
+			\item $ \displaystyle B = M_2 = \frac{1}{6} \int_{\delta X} \left ( \frac{1}{R_1} + \frac{1}{R_2} \right ) dS$
+			\item $\displaystyle \xi = M_3 = \frac{1}{3} \int_{\delta X} \frac{1}{R_1 R_2} dS $
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Метод решения}
+		Для реконструкции применяется генеративная состязательная нейронная сеть
+		\begin{figure}
+			\centering{\includegraphics[width=0.7\linewidth]{GAN_overview}}
+		\end{figure}
+		Ее обучение сводится к минимизации функционала:
+		\[ \underset{\theta}{\min} \underset{\zeta}{\max} \ \mathbb{E}_{x \sim p_{data}}\log D_\zeta(x) + \mathbb{E}_{z \sim p_{z}} \log (1 - D_\zeta(G_\theta(z))) \]
+	\end{frame}
+
+	\begin{frame}{Новизна}
+		\begin{itemize}
+			\item Конкретные архитектуры сетей генератора и дискриминатора взяты неизмененными из других работ похожей тематики;
+			\item Новизна заключается в модифицированной адаптируемой процедуре обучения нейронной сети с автоматическим отслеживанием значений функционалов Минковского и изменением гиперпараметров в процессе обучения;
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Текущие результаты}
+		На данный момент:
+		\begin{itemize}
+			\item Разработка алгоритмической части завершена (реализован программный комплекс, позволяющий обучать нужны сети и использовать их для реконструкции образцов);
+			\item Проведен ряд вычислительных экспериментов по обучению сетей на томографии песчаника;
+			\item Анализ в процессе (анализ функционалов Минковского готов, двухточечная корреляционная функция пока нет);
+			\item Текст готов примерно на треть;
+		\end{itemize}
+		Ещё нужно сделать:
+		\begin{itemize}
+			\item Провести дополнительные вычислительные эксперименты;
+			\item Провести более широкомасштабный анализ функционалов Минковского реконструированных образцов;
+			\item Провести статистический анализ (построить и сравнить двухточечные корреляционные функции);
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Текущие результаты}
+		\begin{columns}
+			\column{0.25\linewidth}
+			\begin{figure}
+				\centering{\includegraphics[width=\linewidth]{original}}
+				\caption{Образец}
+			\end{figure}
+			\column{0.25\linewidth}
+			\begin{figure}
+				\centering{\includegraphics[width=\linewidth]{generated_1}}
+				\caption{1}
+			\end{figure}
+			\column{0.25\linewidth}
+			\begin{figure}
+				\centering{\includegraphics[width=\linewidth]{generated_2}}
+				\caption{2}
+			\end{figure}
+			\column{0.25\linewidth}
+			\begin{figure}
+				\centering{\includegraphics[width=\linewidth]{generated_3}}
+				\caption{3}
+			\end{figure}
+		\end{columns}
+		\vfill
+		\centering{Примеры реконструкции одной из обученных сетей}
+	\end{frame}
+
+	\begin{frame}{Текущие результаты}
+		Анализ значений функционалов Минковского (V, S) для реконструированных образцов
+		\begin{columns}
+			\column{0.45\linewidth}
+			\begin{figure}
+				\centering{\includegraphics[width=\linewidth]{V_dispersion}}
+			\end{figure}
+			\column{0.45\linewidth}
+			\begin{figure}
+				\centering{\includegraphics[width=\linewidth]{S_dispersion}}
+			\end{figure}
+		\end{columns}
+	\end{frame}
+
+	\begin{frame}{Текущие результаты}
+		Анализ значений функционалов Минковского (B, $\xi$) для реконструированных образцов
+		\begin{columns}
+			\column{0.45\linewidth}
+			\begin{figure}
+				\centering{\includegraphics[width=\linewidth]{B_dispersion}}
+			\end{figure}
+			\column{0.45\linewidth}
+			\begin{figure}
+				\centering{\includegraphics[width=\linewidth]{Xi_dispersion}}
+			\end{figure}
+		\end{columns}
+	\end{frame}
+
+\end{document}
